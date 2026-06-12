@@ -13,7 +13,7 @@ class Game {
 private:
     static constexpr int WINDOW_WIDTH = 640;
     static constexpr int WINDOW_HEIGHT = 480;
-    static constexpr int REQUIRED_CRYSTALS = 3;
+    static constexpr int REQUIRED_CRYSTALS = 7;
 
     bool running = false;
     bool victory = false;
