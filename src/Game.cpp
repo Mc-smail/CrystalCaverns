@@ -57,12 +57,12 @@ bool Game::loadLevel(const std::string& path) {
 
     enemies.clear();
     for (const auto& pos : map.getEnemyStarts()) {
-        enemies.push_back(std::make_unique<Enemy>(pos.x, pos.y, textures.get("enemy"));
+        enemies.push_back(std::make_unique<Enemy>(pos.x, pos.y, textures.get("enemy")));
     }
 
     boulders.clear();
     for (const auto& pos : map.getBoulderStarts()) {
-        boulders.push_back(std::make_unique<Boulder>(pos.x, pos.y, textures.get("boulder"));
+        boulders.push_back(std::make_unique<Boulder>(pos.x, pos.y, textures.get("boulder")));
     }
 
     victory = false;
