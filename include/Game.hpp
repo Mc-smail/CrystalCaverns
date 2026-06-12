@@ -14,10 +14,14 @@ private:
     static constexpr int WINDOW_WIDTH = 640;
     static constexpr int WINDOW_HEIGHT = 480;
     static constexpr int REQUIRED_CRYSTALS = 7;
+    static constexpr float LEVEL_TIME_SECONDS = 90.0f;
 
     bool running = false;
     bool victory = false;
     bool gameOver = false;
+    int lives = 3;
+    int currentLevel = 1;
+    float timeLeft = LEVEL_TIME_SECONDS;
 
     SDL_Window* window = nullptr;
     SDL_Renderer* renderer = nullptr;
@@ -32,6 +36,8 @@ private:
     void update(float deltaTime);
     void render();
     void checkCollisions();
+    void loseLife();
+    void nextLevel();
     void drawHud();
     bool loadLevel(const std::string& path);
 

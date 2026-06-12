@@ -67,6 +67,7 @@ bool Game::loadLevel(const std::string& path) {
 
     victory = false;
     gameOver = false;
+    timeLeft = LEVEL_TIME_SECONDS;
     return true;
 }
 
@@ -93,12 +94,24 @@ void Game::handleEvents() {
     if (input.shouldQuit()) running = false;
 
     if ((victory || gameOver) && input.isKeyPressed(SDL_SCANCODE_R)) {
+        lives = 3;
+        currentLevel = 1;
         loadLevel("assets/levels/level01.txt");
+    }
+
+    if (victory && input.isKeyPressed(SDL_SCANCODE_N)) {
+        nextLevel();
     }
 }
 
 void Game::update(float deltaTime) {
     if (!player || victory || gameOver) return;
+
+    timeLeft -= deltaTime;
+    if (timeLeft <= 0.0f) {
+        loseLife();
+        return;
+    }
 
     player->handleInput(input, map);
     player->update(deltaTime, map);
@@ -112,7 +125,12 @@ void Game::update(float deltaTime) {
 
     const auto p = player->getPosition();
     if (map.getTile(p.x, p.y).getType() == TileType::ExitOpen) {
-        victory = true;
+        if (currentLevel >= 2) {
+            victory = true;
+        } else {
+            nextLevel();
+        }
+        return;
     }
 
     checkCollisions();
@@ -123,15 +141,38 @@ void Game::checkCollisions() {
 
     for (const auto& enemy : enemies) {
         if (enemy->getPosition().x == p.x && enemy->getPosition().y == p.y) {
-            gameOver = true;
+            loseLife();
+            return;
         }
     }
 
     for (const auto& boulder : boulders) {
         const auto b = boulder->getPosition();
         if (b.x == p.x && b.y == p.y && boulder->isFalling()) {
-            gameOver = true;
+            loseLife();
+            return;
         }
+    }
+}
+
+
+void Game::loseLife() {
+    --lives;
+    if (lives <= 0) {
+        gameOver = true;
+        return;
+    }
+
+    const std::string path = currentLevel == 1 ? "assets/levels/level01.txt" : "assets/levels/level02.txt";
+    loadLevel(path);
+}
+
+void Game::nextLevel() {
+    if (currentLevel == 1) {
+        currentLevel = 2;
+        loadLevel("assets/levels/level02.txt");
+    } else {
+        victory = true;
     }
 }
 
@@ -153,14 +194,33 @@ void Game::drawHud() {
     SDL_SetRenderDrawColor(renderer, 0, 0, 0, 180);
     SDL_RenderFillRect(renderer, &hud);
 
-    // Simple visual crystal counter: cyan boxes.
+    // Crystal counter: cyan boxes.
     int count = player ? player->getCrystals() : 0;
     for (int i = 0; i < REQUIRED_CRYSTALS; ++i) {
-        SDL_Rect gem{12 + i * 24, WINDOW_HEIGHT - 24, 16, 16};
+        SDL_Rect gem{12 + i * 22, WINDOW_HEIGHT - 24, 15, 15};
         if (i < count) SDL_SetRenderDrawColor(renderer, 60, 220, 255, 255);
         else SDL_SetRenderDrawColor(renderer, 45, 55, 70, 255);
         SDL_RenderFillRect(renderer, &gem);
     }
+
+    // Lives: yellow boxes.
+    for (int i = 0; i < 3; ++i) {
+        SDL_Rect life{210 + i * 24, WINDOW_HEIGHT - 24, 16, 16};
+        if (i < lives) SDL_SetRenderDrawColor(renderer, 255, 220, 70, 255);
+        else SDL_SetRenderDrawColor(renderer, 70, 60, 40, 255);
+        SDL_RenderFillRect(renderer, &life);
+    }
+
+    // Timer bar: green -> red as time runs out.
+    int barWidth = static_cast<int>((timeLeft / LEVEL_TIME_SECONDS) * 180.0f);
+    if (barWidth < 0) barWidth = 0;
+    SDL_Rect timerBack{350, WINDOW_HEIGHT - 23, 180, 14};
+    SDL_SetRenderDrawColor(renderer, 45, 55, 70, 255);
+    SDL_RenderFillRect(renderer, &timerBack);
+    SDL_Rect timer{350, WINDOW_HEIGHT - 23, barWidth, 14};
+    if (timeLeft > 30.0f) SDL_SetRenderDrawColor(renderer, 40, 220, 90, 255);
+    else SDL_SetRenderDrawColor(renderer, 230, 70, 55, 255);
+    SDL_RenderFillRect(renderer, &timer);
 
     if (victory) {
         SDL_Rect box{180, 170, 280, 90};

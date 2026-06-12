@@ -4,7 +4,7 @@ Enemy::Enemy(int x, int y, SDL_Texture* texture) : Entity(x, y, SDL_Color{220, 6
 
 void Enemy::update(float deltaTime, TileMap& map) {
     moveTimer += deltaTime;
-    if (moveTimer < 0.35f) return;
+    if (moveTimer < 0.22f) return;
     moveTimer = 0.0f;
 
     int dx = direction == Direction::Left ? -1 : 1;

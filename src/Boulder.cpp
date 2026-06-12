@@ -6,7 +6,7 @@ bool Boulder::isFalling() const { return falling; }
 
 void Boulder::update(float deltaTime, TileMap& map) {
     fallTimer += deltaTime;
-    if (fallTimer < 0.22f) return;
+    if (fallTimer < 0.14f) return;
     fallTimer = 0.0f;
 
     int belowX = position.x;
