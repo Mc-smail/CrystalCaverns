@@ -1,0 +1,421 @@
+<!doctype html><html lang="de"><head><meta charset="utf-8"><title>Crystal Caverns Dokumentation</title>
+<style>
+@page{size:A4;margin:17mm 15mm}*{box-sizing:border-box}body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Arial,sans-serif;color:#111827;line-height:1.55;font-size:12.3px}h1{font-size:31px;color:#0f172a;margin:0 0 10px}h2{font-size:20px;color:#0f172a;margin:28px 0 13px;padding:10px 14px;background:#eef2ff;border-left:6px solid #2563eb;border-radius:10px;break-after:avoid}h3{font-size:15.5px;color:#1e3a8a;margin:20px 0 8px;border-bottom:1px solid #dbeafe;padding-bottom:4px;break-after:avoid}h4{font-size:13.5px;color:#334155;margin:14px 0 6px}p{margin:7px 0;text-align:justify}li{margin:4px 0}table{width:100%;border-collapse:separate;border-spacing:0;border:1px solid #cbd5e1;border-radius:12px;overflow:hidden;margin:12px 0 18px;font-size:11.2px}th,td{border-right:1px solid #cbd5e1;border-bottom:1px solid #cbd5e1;padding:8px 9px;vertical-align:top}th:last-child,td:last-child{border-right:0}tr:last-child td{border-bottom:0}th{background:#dbeafe;color:#0f172a;text-align:left}pre{background:#0f172a;color:#f8fafc;padding:14px 16px;border-radius:12px;white-space:pre-wrap;font-size:10.4px;line-height:1.45;overflow-wrap:anywhere}code{font-family:Menlo,Consolas,monospace}.cover{background:linear-gradient(135deg,#eff6ff,#fff);border:2px solid #bfdbfe;border-radius:18px;padding:26px;margin-bottom:22px}.meta{color:#334155}.box{background:#f8fafc;border:1px solid #d8e1ee;border-left:6px solid #2563eb;border-radius:14px;padding:14px 16px;margin:12px 0 20px}.green{border-left-color:#16a34a;background:#f7fdf9}
+</style></head><body>
+<div class="cover"><h1>Crystal Caverns – Projektdokumentation</h1><div class="meta">Projektdokumentation für das C++/SDL2-Spiel</div></div>
+<p><strong>Projekt:</strong> Crystal Caverns  </p>
+<p><strong>Sprache:</strong> C++17  </p>
+<p><strong>Bibliothek:</strong> SDL2  </p>
+<p><strong>Repository:</strong> &lt;https://github.com/Mc-smail/CrystalCaverns&gt;  </p>
+<p><strong>Genre:</strong> 2D Retro Tile Adventure  </p>
+<hr>
+<h2>1. Kurzbeschreibung</h2>
+<p><strong>Crystal Caverns</strong> ist ein kleines 2D-Spiel in C++ mit SDL2. Der Spieler bewegt sich durch eine Höhle, sammelt Kristalle, vermeidet Gegner und fallende Steine und erreicht den Ausgang. Nach Abschluss des ersten Levels startet automatisch ein schwierigeres zweites Level.</p>
+<p>Das Spiel wurde so entwickelt, dass wichtige Konzepte aus der 2D-Game-Development-Vorlesung praktisch angewendet werden:</p>
+<div>• Game Loop: `Input → Update → Render`</div>
+<div>• SDL2-Fenster und Renderer</div>
+<div>• Event-Handling und Keyboard-State</div>
+<div>• Tilemap aus Textdateien</div>
+<div>• Sprites/Texturen mit SDL</div>
+<div>• Kollisionen</div>
+<div>• Klassen, Vererbung und Polymorphismus</div>
+<div>• moderne C++-Struktur mit Header-/Source-Trennung</div>
+<div>• `std::vector` und `std::unique_ptr`</div>
+<hr>
+<h2>2. Spielziel</h2>
+<p>Der Spieler muss pro Level mindestens <strong>7 Kristalle</strong> sammeln. Danach öffnet sich der Ausgang. Wenn der Spieler den Ausgang erreicht, wird im ersten Level automatisch das zweite Level geladen. Nach dem zweiten Level ist das Spiel gewonnen.</p>
+<p>Der Spieler verliert ein Leben, wenn:</p>
+<div>• er von einem Gegner berührt wird,</div>
+<div>• er von einem fallenden Stein getroffen wird,</div>
+<div>• der Level-Timer abläuft.</div>
+<p>Nach <strong>3 verlorenen Leben</strong> ist das Spiel vorbei.</p>
+<hr>
+<h2>3. Steuerung</h2>
+<table>
+<tr><th>Taste</{tag}><th>Funktion</{tag}></tr>
+<tr><td>`W` / Pfeil hoch</{tag}><td>Spieler nach oben bewegen</{tag}></tr>
+<tr><td>`A` / Pfeil links</{tag}><td>Spieler nach links bewegen</{tag}></tr>
+<tr><td>`S` / Pfeil runter</{tag}><td>Spieler nach unten bewegen</{tag}></tr>
+<tr><td>`D` / Pfeil rechts</{tag}><td>Spieler nach rechts bewegen</{tag}></tr>
+<tr><td>`R`</{tag}><td>Nach Game Over / Victory neu starten</{tag}></tr>
+<tr><td>`ESC`</{tag}><td>Spiel beenden</{tag}></tr>
+</table>
+<hr>
+<h2>4. Spielmechaniken</h2>
+<h3>4.1 Tilemap</h3>
+<p>Die Spielwelt besteht aus einem Raster. Jedes Zeichen in der Leveldatei steht für ein bestimmtes Objekt.</p>
+<table>
+<tr><th>Zeichen</{tag}><th>Bedeutung</{tag}></tr>
+<tr><td>`#`</{tag}><td>Wand, nicht begehbar</{tag}></tr>
+<tr><td>`.`</{tag}><td>Erde, begehbar und wird beim Betreten entfernt</{tag}></tr>
+<tr><td>`P`</{tag}><td>Startposition des Spielers</{tag}></tr>
+<tr><td>`C`</{tag}><td>Kristall</{tag}></tr>
+<tr><td>`O`</{tag}><td>Stein / Boulder</{tag}></tr>
+<tr><td>`X`</{tag}><td>Gegner</{tag}></tr>
+<tr><td>`E`</{tag}><td>Ausgang</{tag}></tr>
+</table>
+<h3>4.2 Kristalle</h3>
+<p>Kristalle werden eingesammelt, wenn der Spieler das Feld betritt. Nach dem Einsammeln wird das Feld leer.</p>
+<h3>4.3 Ausgang</h3>
+<p>Der Ausgang ist zuerst geschlossen. Sobald der Spieler mindestens 7 Kristalle gesammelt hat, wird der Ausgang geöffnet.</p>
+<h3>4.4 Gegner</h3>
+<p>Gegner bewegen sich automatisch horizontal. Wenn sie auf eine Wand oder ein Hindernis treffen, wechseln sie die Richtung.</p>
+<h3>4.5 Steine</h3>
+<p>Steine fallen nach unten, wenn das Feld darunter frei ist. Trifft ein fallender Stein den Spieler, verliert der Spieler ein Leben.</p>
+<h3>4.6 Timer und Leben</h3>
+<p>Jedes Level hat ein Zeitlimit von <strong>90 Sekunden</strong>. Der Spieler hat <strong>3 Leben</strong>. Das HUD zeigt Kristalle, Leben und Timer-Leiste an.</p>
+<hr>
+<h2>5. Levelübersicht</h2>
+<table>
+<tr><th>Level</{tag}><th>Kristalle</{tag}><th>Gegner</{tag}><th>Steine</{tag}><th>Schwierigkeit</{tag}></tr>
+<tr><td>Level 1</{tag}><td>8</{tag}><td>3</{tag}><td>4</{tag}><td>Mittel</{tag}></tr>
+<tr><td>Level 2</{tag}><td>10</{tag}><td>3</{tag}><td>5</{tag}><td>Schwer</{tag}></tr>
+</table>
+<p>Level 2 ist schwieriger, weil es mehr Kristalle, mehr Steine und engere Wege enthält.</p>
+<hr>
+<h2>6. Technische Architektur</h2>
+<p>Das Projekt ist objektorientiert aufgebaut. Die wichtigsten Klassen sind:</p>
+<div>• `Game`</div>
+<div>• `InputManager`</div>
+<div>• `TextureManager`</div>
+<div>• `Tile`</div>
+<div>• `TileMap`</div>
+<div>• `Entity`</div>
+<div>• `Player`</div>
+<div>• `Enemy`</div>
+<div>• `Boulder`</div>
+<h3>6.1 Game Loop</h3>
+<p>Die Hauptschleife befindet sich in <code>Game::run()</code>:</p>
+<pre><code>while (running) {
+    handleEvents();
+    update(deltaTime);
+    render();
+}</code></pre>
+<p>Die Schleife besteht aus drei Phasen:</p>
+<div>1. **Input:** Tastatur und SDL-Events lesen.</div>
+<div>2. **Update:** Weltzustand verändern, Bewegung und Kollisionen berechnen.</div>
+<div>3. **Render:** Map, Entities und HUD zeichnen.</div>
+<hr>
+<h2>7. UML-Klassendiagramm</h2>
+<pre><code>classDiagram
+    class Game {
+        -bool running
+        -bool victory
+        -bool gameOver
+        -int lives
+        -int currentLevel
+        -float timeLeft
+        -SDL_Window* window
+        -SDL_Renderer* renderer
+        -InputManager input
+        -TextureManager textures
+        -TileMap map
+        -unique_ptr~Player~ player
+        -vector~unique_ptr~Enemy~~ enemies
+        -vector~unique_ptr~Boulder~~ boulders
+        +init() bool
+        +run() void
+        +quit() void
+        -loadLevel(path) bool
+        -handleEvents() void
+        -update(deltaTime) void
+        -render() void
+        -checkCollisions() void
+        -loseLife() void
+        -nextLevel() void
+        -drawHud() void
+    }
+
+    class InputManager {
+        -const Uint8* keyboardState
+        -bool quitRequested
+        +update() void
+        +handleEvent(event) void
+        +isKeyPressed(key) bool
+        +shouldQuit() bool
+    }
+
+    class TextureManager {
+        -SDL_Renderer* renderer
+        -map~string, SDL_Texture*~ textures
+        +setRenderer(renderer) void
+        +load(id, path) bool
+        +get(id) SDL_Texture*
+        +clear() void
+    }
+
+    class TileMap {
+        -vector~vector~Tile~~ tiles
+        -int width
+        -int height
+        -int tileSize
+        -Vector2i playerStart
+        -vector~Vector2i~ enemyStarts
+        -vector~Vector2i~ boulderStarts
+        +loadFromFile(filename) bool
+        +render(renderer, textures) void
+        +isWalkable(x,y) bool
+        +getTile(x,y) Tile
+        +setTile(x,y,type) void
+        +openExit() void
+    }
+
+    class Tile {
+        -TileType type
+        +getType() TileType
+        +setType(type) void
+        +isSolid() bool
+        +isWalkable() bool
+        +isCollectible() bool
+        +color() SDL_Color
+    }
+
+    class Entity {
+        &lt;&lt;abstract&gt;&gt;
+        #Vector2i position
+        #SDL_Color renderColor
+        #SDL_Texture* texture
+        #bool alive
+        +update(deltaTime,map) void
+        +render(renderer,tileSize) void
+        +getPosition() Vector2i
+        +getHitbox(tileSize) SDL_Rect
+        +kill() void
+    }
+
+    class Player {
+        -int crystals
+        -float moveCooldown
+        +handleInput(input,map) void
+        +move(direction,map) void
+        +collect(map) void
+        +getCrystals() int
+        +update(deltaTime,map) void
+    }
+
+    class Enemy {
+        -Direction direction
+        -float moveTimer
+        +update(deltaTime,map) void
+    }
+
+    class Boulder {
+        -float fallTimer
+        -bool falling
+        +isFalling() bool
+        +update(deltaTime,map) void
+    }
+
+    Game --&gt; InputManager
+    Game --&gt; TextureManager
+    Game --&gt; TileMap
+    Game --&gt; Player
+    Game --&gt; Enemy
+    Game --&gt; Boulder
+    TileMap --&gt; Tile
+    Entity &lt;|-- Player
+    Entity &lt;|-- Enemy
+    Entity &lt;|-- Boulder</code></pre>
+<hr>
+<h2>8. Klassenbeschreibung</h2>
+<h3>8.1 `Game`</h3>
+<p>Die Klasse <code>Game</code> steuert das komplette Spiel. Sie initialisiert SDL, lädt Level, verwaltet den Game Loop und entscheidet über Sieg, Niederlage und Levelwechsel.</p>
+<p><strong>Wichtige Attribute:</strong></p>
+<div>• `running`: steuert, ob die Game Loop läuft.</div>
+<div>• `victory`: zeigt an, ob das Spiel gewonnen ist.</div>
+<div>• `gameOver`: zeigt an, ob das Spiel verloren ist.</div>
+<div>• `lives`: Anzahl der Leben.</div>
+<div>• `currentLevel`: aktuelles Level.</div>
+<div>• `timeLeft`: verbleibende Zeit im Level.</div>
+<div>• `map`: aktuelle Tilemap.</div>
+<div>• `player`: Spielerobjekt.</div>
+<div>• `enemies`: Liste aller Gegner.</div>
+<div>• `boulders`: Liste aller Steine.</div>
+<p><strong>Wichtige Methoden:</strong></p>
+<div>• `init()` initialisiert SDL und lädt das erste Level.</div>
+<div>• `run()` enthält die Hauptschleife.</div>
+<div>• `update()` aktualisiert Weltzustand, Timer und Entities.</div>
+<div>• `render()` zeichnet Spielwelt und HUD.</div>
+<div>• `loadLevel()` lädt ein Level aus einer Textdatei.</div>
+<div>• `loseLife()` reduziert Leben und lädt ggf. das Level neu.</div>
+<div>• `nextLevel()` wechselt zu Level 2 oder Victory.</div>
+<hr>
+<h3>8.2 `InputManager`</h3>
+<p>Diese Klasse kapselt SDL-Input. Dadurch muss nicht jede Klasse direkt mit SDL-Events arbeiten.</p>
+<p><strong>Aufgaben:</strong></p>
+<div>• SDL-Events verarbeiten.</div>
+<div>• Tastaturzustand abfragen.</div>
+<div>• Quit-Events erkennen.</div>
+<hr>
+<h3>8.3 `TextureManager`</h3>
+<p>Der <code>TextureManager</code> lädt BMP-Dateien mit SDL und verwaltet sie über IDs.</p>
+<pre><code>SDL_Surface* surface = SDL_LoadBMP(path.c_str());
+SDL_Texture* texture = SDL_CreateTextureFromSurface(renderer, surface);</code></pre>
+<p>Vorteil: Texturen werden zentral geladen und können überall wiederverwendet werden.</p>
+<hr>
+<h3>8.4 `Tile` und `TileMap`</h3>
+<p><code>Tile</code> repräsentiert ein einzelnes Feld. <code>TileMap</code> verwaltet alle Felder als 2D-Datenstruktur.</p>
+<pre><code>std::vector&lt;std::vector&lt;Tile&gt;&gt; tiles;</code></pre>
+<p><code>TileMap::loadFromFile()</code> liest Leveldateien ein und erzeugt daraus Map, Spielerstart, Gegner und Steine.</p>
+<hr>
+<h3>8.5 `Entity`</h3>
+<p><code>Entity</code> ist die abstrakte Basisklasse für bewegliche Spielobjekte. Dadurch können Spieler, Gegner und Steine einheitlich behandelt werden.</p>
+<p><strong>Abgeleitete Klassen:</strong></p>
+<div>• `Player`</div>
+<div>• `Enemy`</div>
+<div>• `Boulder`</div>
+<hr>
+<h3>8.6 `Player`</h3>
+<p>Der Spieler verarbeitet Eingaben, bewegt sich durch die Map und sammelt Kristalle.</p>
+<hr>
+<h3>8.7 `Enemy`</h3>
+<p>Ein Gegner bewegt sich automatisch horizontal und kehrt bei Hindernissen um.</p>
+<hr>
+<h3>8.8 `Boulder`</h3>
+<p>Ein Stein fällt nach unten, wenn das Feld darunter frei ist. Ein fallender Stein ist gefährlich für den Spieler.</p>
+<hr>
+<h2>9. Projektstruktur</h2>
+<pre><code>CrystalCaverns/
+├── CMakeLists.txt
+├── README.md
+├── assets/
+│   ├── levels/
+│   │   ├── level01.txt
+│   │   └── level02.txt
+│   └── sprites/
+│       ├── boulder.bmp
+│       ├── crystal.bmp
+│       ├── dirt.bmp
+│       ├── empty.bmp
+│       ├── enemy.bmp
+│       ├── exit_closed.bmp
+│       ├── exit_open.bmp
+│       ├── player.bmp
+│       └── wall.bmp
+├── include/
+│   ├── Boulder.hpp
+│   ├── Enemy.hpp
+│   ├── Entity.hpp
+│   ├── Game.hpp
+│   ├── InputManager.hpp
+│   ├── Player.hpp
+│   ├── TextureManager.hpp
+│   ├── Tile.hpp
+│   ├── TileMap.hpp
+│   └── Types.hpp
+└── src/
+    ├── Boulder.cpp
+    ├── Enemy.cpp
+    ├── Entity.cpp
+    ├── Game.cpp
+    ├── InputManager.cpp
+    ├── main.cpp
+    ├── Player.cpp
+    ├── TextureManager.cpp
+    ├── Tile.cpp
+    └── TileMap.cpp</code></pre>
+<hr>
+<h2>10. Build- und Startanleitung</h2>
+<h3>macOS mit Homebrew</h3>
+<pre><code>brew install cmake sdl2
+cd &quot;CrystalCaverns&quot;
+mkdir -p build
+cd build
+cmake ..
+cmake --build .
+cd ..
+./build/CrystalCaverns</code></pre>
+<h3>Ubuntu / Kali / Debian</h3>
+<pre><code>sudo apt update
+sudo apt install -y build-essential cmake libsdl2-dev
+cd CrystalCaverns
+mkdir -p build
+cd build
+cmake ..
+cmake --build .
+cd ..
+./build/CrystalCaverns</code></pre>
+<hr>
+<h2>11. Wichtige Codeausschnitte</h2>
+<h3>11.1 Game Loop</h3>
+<pre><code>void Game::run() {
+    Uint64 previous = SDL_GetPerformanceCounter();
+
+    while (running) {
+        Uint64 current = SDL_GetPerformanceCounter();
+        float deltaTime = static_cast&lt;float&gt;(current - previous) /
+            static_cast&lt;float&gt;(SDL_GetPerformanceFrequency());
+        previous = current;
+
+        handleEvents();
+        update(deltaTime);
+        render();
+    }
+}</code></pre>
+<h3>11.2 Level laden</h3>
+<pre><code>bool TileMap::loadFromFile(const std::string&amp; filename) {
+    std::ifstream file(filename);
+    if (!file) return false;
+
+    std::string line;
+    int y = 0;
+    while (std::getline(file, line)) {
+        std::vector&lt;Tile&gt; row;
+        for (int x = 0; x &lt; static_cast&lt;int&gt;(line.size()); ++x) {
+            char c = line[x];
+            // Zeichen werden in Tiles oder Entities übersetzt
+        }
+        tiles.push_back(row);
+        ++y;
+    }
+    return true;
+}</code></pre>
+<h3>11.3 Spielerbewegung</h3>
+<pre><code>void Player::move(Direction direction, TileMap&amp; map) {
+    int newX = position.x;
+    int newY = position.y;
+
+    switch (direction) {
+        case Direction::Up:    --newY; break;
+        case Direction::Down:  ++newY; break;
+        case Direction::Left:  --newX; break;
+        case Direction::Right: ++newX; break;
+        case Direction::None: return;
+    }
+
+    if (map.isWalkable(newX, newY)) {
+        position.x = newX;
+        position.y = newY;
+        collect(map);
+    }
+}</code></pre>
+<hr>
+<h2>12. Designentscheidungen</h2>
+<h3>12.1 Warum SDL2?</h3>
+<p>SDL2 stellt die grundlegenden Funktionen bereit, die für ein 2D-Spiel nötig sind:</p>
+<div>• Fenster</div>
+<div>• Renderer</div>
+<div>• Events</div>
+<div>• Tastatur</div>
+<div>• Texturen</div>
+<p>Gleichzeitig bleibt SDL2 niedrigschwellig genug, um die Architektur selbst zu verstehen.</p>
+<h3>12.2 Warum BMP statt SDL2_image?</h3>
+<p>Das Projekt nutzt BMP-Dateien, weil SDL2 diese direkt laden kann. Dadurch wird keine zusätzliche Bibliothek wie SDL2_image benötigt. Das vereinfacht Build und Installation.</p>
+<h3>12.3 Warum `std::unique_ptr`?</h3>
+<p>Dynamische Spielobjekte wie Gegner und Steine werden über Smart Pointer verwaltet. Dadurch wird Speicher automatisch freigegeben.</p>
+<hr>
+<h2>13. Erweiterungsmöglichkeiten</h2>
+<div>• mehr Level</div>
+<div>• Menü mit Text über SDL_ttf</div>
+<div>• Soundeffekte mit SDL_mixer</div>
+<div>• bessere Gegner-KI</div>
+<div>• Highscore-System</div>
+<div>• Level-Editor</div>
+<div>• Animationen mit Spritesheets</div>
+<div>• Schlüssel-Tür-System</div>
+<div>• verschiedene Steinarten</div>
+<div>• zufällig generierte Höhlen</div>
+<div>• Speichern und Laden</div>
+<hr>
+<h2>14. Fazit</h2>
+<p>Crystal Caverns ist ein vollständiges kleines C++/SDL2-Spielprojekt. Es zeigt die wichtigsten Grundlagen moderner 2D-Spieleentwicklung: Game Loop, Input, Rendering, Tilemaps, Kollisionen, Entities und objektorientierte Struktur. Durch zwei Level, Timer, Leben und steigende Schwierigkeit ist das Spiel nicht nur eine technische Demo, sondern tatsächlich spielbar.</p></body></html>
