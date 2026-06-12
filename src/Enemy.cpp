@@ -1,6 +1,6 @@
 #include "Enemy.hpp"
 
-Enemy::Enemy(int x, int y) : Entity(x, y, SDL_Color{220, 60, 80, 255}) {}
+Enemy::Enemy(int x, int y, SDL_Texture* texture) : Entity(x, y, SDL_Color{220, 60, 80, 255}, texture) {}
 
 void Enemy::update(float deltaTime, TileMap& map) {
     moveTimer += deltaTime;

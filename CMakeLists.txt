@@ -9,6 +9,7 @@ add_executable(CrystalCaverns
     src/main.cpp
     src/Game.cpp
     src/InputManager.cpp
+    src/TextureManager.cpp
     src/Tile.cpp
     src/TileMap.cpp
     src/Entity.cpp

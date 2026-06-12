@@ -7,6 +7,6 @@ private:
     float moveTimer = 0.0f;
 
 public:
-    Enemy(int x, int y);
+    Enemy(int x, int y, SDL_Texture* texture = nullptr);
     void update(float deltaTime, TileMap& map) override;
 };

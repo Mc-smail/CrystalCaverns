@@ -1,6 +1,6 @@
 #include "Player.hpp"
 
-Player::Player(int x, int y) : Entity(x, y, SDL_Color{255, 220, 70, 255}) {}
+Player::Player(int x, int y, SDL_Texture* texture) : Entity(x, y, SDL_Color{255, 220, 70, 255}, texture) {}
 
 void Player::handleInput(const InputManager& input, TileMap& map) {
     if (moveCooldown > 0.0f) return;

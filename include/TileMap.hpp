@@ -4,6 +4,7 @@
 #include <SDL.h>
 #include "Tile.hpp"
 #include "Types.hpp"
+#include "TextureManager.hpp"
 
 class TileMap {
 private:
@@ -17,7 +18,7 @@ private:
 
 public:
     bool loadFromFile(const std::string& filename);
-    void render(SDL_Renderer* renderer) const;
+    void render(SDL_Renderer* renderer, const TextureManager& textures) const;
 
     bool inBounds(int x, int y) const;
     bool isWalkable(int x, int y) const;

@@ -28,6 +28,17 @@ bool Game::init() {
         return false;
     }
 
+    textures.setRenderer(renderer);
+    textures.load("empty", "assets/sprites/empty.bmp");
+    textures.load("dirt", "assets/sprites/dirt.bmp");
+    textures.load("wall", "assets/sprites/wall.bmp");
+    textures.load("crystal", "assets/sprites/crystal.bmp");
+    textures.load("boulder", "assets/sprites/boulder.bmp");
+    textures.load("player", "assets/sprites/player.bmp");
+    textures.load("enemy", "assets/sprites/enemy.bmp");
+    textures.load("exit_closed", "assets/sprites/exit_closed.bmp");
+    textures.load("exit_open", "assets/sprites/exit_open.bmp");
+
     if (!loadLevel("assets/levels/level01.txt")) {
         return false;
     }
@@ -42,16 +53,16 @@ bool Game::loadLevel(const std::string& path) {
     }
 
     Vector2i start = map.getPlayerStart();
-    player = std::make_unique<Player>(start.x, start.y);
+    player = std::make_unique<Player>(start.x, start.y, textures.get("player"));
 
     enemies.clear();
     for (const auto& pos : map.getEnemyStarts()) {
-        enemies.push_back(std::make_unique<Enemy>(pos.x, pos.y));
+        enemies.push_back(std::make_unique<Enemy>(pos.x, pos.y, textures.get("enemy"));
     }
 
     boulders.clear();
     for (const auto& pos : map.getBoulderStarts()) {
-        boulders.push_back(std::make_unique<Boulder>(pos.x, pos.y));
+        boulders.push_back(std::make_unique<Boulder>(pos.x, pos.y, textures.get("boulder"));
     }
 
     victory = false;
@@ -128,7 +139,7 @@ void Game::render() {
     SDL_SetRenderDrawColor(renderer, 10, 12, 20, 255);
     SDL_RenderClear(renderer);
 
-    map.render(renderer);
+    map.render(renderer, textures);
     for (const auto& boulder : boulders) boulder->render(renderer, map.getTileSize());
     for (const auto& enemy : enemies) enemy->render(renderer, map.getTileSize());
     if (player) player->render(renderer, map.getTileSize());

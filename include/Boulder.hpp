@@ -7,7 +7,7 @@ private:
     bool falling = false;
 
 public:
-    Boulder(int x, int y);
+    Boulder(int x, int y, SDL_Texture* texture = nullptr);
     bool isFalling() const;
     void update(float deltaTime, TileMap& map) override;
 };

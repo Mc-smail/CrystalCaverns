@@ -49,13 +49,32 @@ bool TileMap::loadFromFile(const std::string& filename) {
     return width > 0 && height > 0;
 }
 
-void TileMap::render(SDL_Renderer* renderer) const {
+void TileMap::render(SDL_Renderer* renderer, const TextureManager& textures) const {
     for (int y = 0; y < height; ++y) {
         for (int x = 0; x < width; ++x) {
             SDL_Rect rect{x * tileSize, y * tileSize, tileSize, tileSize};
-            SDL_Color color = tiles[y][x].color();
-            SDL_SetRenderDrawColor(renderer, color.r, color.g, color.b, color.a);
-            SDL_RenderFillRect(renderer, &rect);
+            const Tile& tile = tiles[y][x];
+
+            const char* textureId = "empty";
+            switch (tile.getType()) {
+                case TileType::Wall:       textureId = "wall"; break;
+                case TileType::Dirt:       textureId = "dirt"; break;
+                case TileType::Crystal:    textureId = "crystal"; break;
+                case TileType::Boulder:    textureId = "boulder"; break;
+                case TileType::ExitClosed: textureId = "exit_closed"; break;
+                case TileType::ExitOpen:   textureId = "exit_open"; break;
+                case TileType::Empty:      textureId = "empty"; break;
+            }
+
+            SDL_Texture* texture = textures.get(textureId);
+            if (texture) {
+                SDL_RenderCopy(renderer, texture, nullptr, &rect);
+            } else {
+                SDL_Color color = tile.color();
+                SDL_SetRenderDrawColor(renderer, color.r, color.g, color.b, color.a);
+                SDL_RenderFillRect(renderer, &rect);
+            }
+
             SDL_SetRenderDrawColor(renderer, 0, 0, 0, 70);
             SDL_RenderDrawRect(renderer, &rect);
         }

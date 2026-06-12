@@ -6,6 +6,7 @@ Der Spieler bewegt sich durch eine Höhle, sammelt Kristalle, vermeidet Gegner u
 ## Features
 
 - SDL2-Fenster und Renderer
+- echte SDL-Texturen mit BMP-Sprites über `SDL_LoadBMP` und `SDL_RenderCopy`
 - Game Loop: Input → Update → Render
 - Tilemap aus Textdatei
 - Spielerbewegung mit WASD oder Pfeiltasten
@@ -68,6 +69,15 @@ CrystalCaverns/
 ├── CMakeLists.txt
 ├── README.md
 ├── assets/
+│   ├── sprites/
+│   │   ├── player.bmp
+│   │   ├── enemy.bmp
+│   │   ├── boulder.bmp
+│   │   ├── wall.bmp
+│   │   ├── dirt.bmp
+│   │   ├── crystal.bmp
+│   │   ├── exit_closed.bmp
+│   │   └── exit_open.bmp
 │   └── levels/
 │       └── level01.txt
 ├── include/
@@ -103,3 +113,29 @@ Das Projekt nutzt zentrale Inhalte aus 2D Game Development und C++:
 - Klassen und Vererbung
 - Polymorphismus über `Entity`
 - moderne Speicherverwaltung mit `std::unique_ptr`
+
+
+## Grafik / SDL-Rendering
+
+Die aktuelle Version benutzt echte SDL-Grafikdateien im BMP-Format. Dadurch wird keine Zusatzbibliothek wie SDL2_image benötigt.
+
+Wichtige Dateien:
+
+```text
+assets/sprites/player.bmp
+assets/sprites/enemy.bmp
+assets/sprites/boulder.bmp
+assets/sprites/wall.bmp
+assets/sprites/dirt.bmp
+assets/sprites/crystal.bmp
+assets/sprites/exit_closed.bmp
+assets/sprites/exit_open.bmp
+```
+
+Die Texturen werden über `TextureManager` geladen:
+
+```cpp
+SDL_Surface* surface = SDL_LoadBMP(path.c_str());
+SDL_Texture* texture = SDL_CreateTextureFromSurface(renderer, surface);
+SDL_RenderCopy(renderer, texture, nullptr, &rect);
+```

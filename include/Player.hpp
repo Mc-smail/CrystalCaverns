@@ -8,7 +8,7 @@ private:
     float moveCooldown = 0.0f;
 
 public:
-    Player(int x, int y);
+    Player(int x, int y, SDL_Texture* texture = nullptr);
     void handleInput(const InputManager& input, TileMap& map);
     void move(Direction direction, TileMap& map);
     void collect(TileMap& map);

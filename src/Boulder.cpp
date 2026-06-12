@@ -1,6 +1,6 @@
 #include "Boulder.hpp"
 
-Boulder::Boulder(int x, int y) : Entity(x, y, SDL_Color{150, 150, 150, 255}) {}
+Boulder::Boulder(int x, int y, SDL_Texture* texture) : Entity(x, y, SDL_Color{150, 150, 150, 255}, texture) {}
 
 bool Boulder::isFalling() const { return falling; }
 

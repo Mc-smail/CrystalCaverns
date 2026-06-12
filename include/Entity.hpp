@@ -7,10 +7,11 @@ class Entity {
 protected:
     Vector2i position;
     SDL_Color renderColor{255,255,255,255};
+    SDL_Texture* texture = nullptr;
     bool alive = true;
 
 public:
-    Entity(int x, int y, SDL_Color color);
+    Entity(int x, int y, SDL_Color color, SDL_Texture* texture = nullptr);
     virtual ~Entity() = default;
 
     virtual void update(float deltaTime, TileMap& map) = 0;

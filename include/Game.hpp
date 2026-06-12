@@ -7,6 +7,7 @@
 #include "Player.hpp"
 #include "Enemy.hpp"
 #include "Boulder.hpp"
+#include "TextureManager.hpp"
 
 class Game {
 private:
@@ -21,6 +22,7 @@ private:
     SDL_Window* window = nullptr;
     SDL_Renderer* renderer = nullptr;
     InputManager input;
+    TextureManager textures;
     TileMap map;
     std::unique_ptr<Player> player;
     std::vector<std::unique_ptr<Enemy>> enemies;
