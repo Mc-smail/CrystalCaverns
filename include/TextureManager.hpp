@@ -13,7 +13,7 @@ public:
     ~TextureManager();
 
     void setRenderer(SDL_Renderer* renderer);
-    bool load(const std::string& id, const std::string& path);
-    SDL_Texture* get(const std::string& id) const;
-    void clear();
+    bool ladeTextur(const std::string& id, const std::string& path);
+    SDL_Texture* getTextur(const std::string& id) const;
+    void loescheAlleTexturen();
 };

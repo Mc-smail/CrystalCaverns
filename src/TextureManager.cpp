@@ -4,14 +4,14 @@
 TextureManager::TextureManager(SDL_Renderer* renderer) : renderer(renderer) {}
 
 TextureManager::~TextureManager() {
-    clear();
+    loescheAlleTexturen();
 }
 
 void TextureManager::setRenderer(SDL_Renderer* newRenderer) {
     renderer = newRenderer;
 }
 
-bool TextureManager::load(const std::string& id, const std::string& path) {
+bool TextureManager::ladeTextur(const std::string& id, const std::string& path) {
     if (!renderer) {
         std::cerr << "TextureManager has no renderer.\n";
         return false;
@@ -35,13 +35,13 @@ bool TextureManager::load(const std::string& id, const std::string& path) {
     return true;
 }
 
-SDL_Texture* TextureManager::get(const std::string& id) const {
+SDL_Texture* TextureManager::getTextur(const std::string& id) const {
     auto it = textures.find(id);
     if (it == textures.end()) return nullptr;
     return it->second;
 }
 
-void TextureManager::clear() {
+void TextureManager::loescheAlleTexturen() {
     for (auto& [id, texture] : textures) {
         SDL_DestroyTexture(texture);
     }

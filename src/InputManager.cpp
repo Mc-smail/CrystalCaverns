@@ -1,11 +1,11 @@
 #include "InputManager.hpp"
 
-void InputManager::update() {
+void InputManager::aktualisiereTastatur() {
     SDL_PumpEvents();
     keyboardState = SDL_GetKeyboardState(nullptr);
 }
 
-void InputManager::handleEvent(const SDL_Event& event) {
+void InputManager::verarbeiteEvent(const SDL_Event& event) {
     if (event.type == SDL_QUIT) {
         quitRequested = true;
     }
@@ -14,10 +14,10 @@ void InputManager::handleEvent(const SDL_Event& event) {
     }
 }
 
-bool InputManager::isKeyPressed(SDL_Scancode key) const {
+bool InputManager::tasteGedrueckt(SDL_Scancode key) const {
     return keyboardState && keyboardState[key];
 }
 
-bool InputManager::shouldQuit() const {
+bool InputManager::sollBeenden() const {
     return quitRequested;
 }

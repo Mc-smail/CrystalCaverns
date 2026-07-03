@@ -7,8 +7,8 @@ private:
     bool quitRequested = false;
 
 public:
-    void update();
-    void handleEvent(const SDL_Event& event);
-    bool isKeyPressed(SDL_Scancode key) const;
-    bool shouldQuit() const;
+    void aktualisiereTastatur();
+    void verarbeiteEvent(const SDL_Event& event);
+    bool tasteGedrueckt(SDL_Scancode key) const;
+    bool sollBeenden() const;
 };

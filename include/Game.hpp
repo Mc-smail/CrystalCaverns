@@ -32,18 +32,18 @@ private:
     std::vector<std::unique_ptr<Enemy>> enemies;
     std::vector<std::unique_ptr<Boulder>> boulders;
 
-    void handleEvents();
-    void update(float deltaTime);
-    void render();
-    void checkCollisions();
-    void loseLife();
-    void nextLevel();
-    void drawHud();
-    bool loadLevel(const std::string& path);
+    void verarbeiteEingaben();
+    void aktualisiereSpiel(float deltaTime);
+    void zeichneSpiel();
+    void pruefeKollisionen();
+    void verliereLeben();
+    void starteNaechstesLevel();
+    void zeichneAnzeige();
+    bool ladeLevel(const std::string& path);
 
 public:
-    bool init();
-    void run();
-    void quit();
+    bool vorbereiten();
+    void spielen();
+    void beenden();
     ~Game();
 };

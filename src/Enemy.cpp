@@ -2,7 +2,7 @@
 
 Enemy::Enemy(int x, int y, SDL_Texture* texture) : Entity(x, y, SDL_Color{220, 60, 80, 255}, texture) {}
 
-void Enemy::update(float deltaTime, TileMap& map) {
+void Enemy::aktualisieren(float deltaTime, TileMap& map) {
     moveTimer += deltaTime;
     if (moveTimer < 0.22f) return;
     moveTimer = 0.0f;
@@ -11,7 +11,7 @@ void Enemy::update(float deltaTime, TileMap& map) {
     int newX = position.x + dx;
     int newY = position.y;
 
-    if (map.isWalkable(newX, newY)) {
+    if (map.istBegehbar(newX, newY)) {
         position.x = newX;
     } else {
         direction = direction == Direction::Left ? Direction::Right : Direction::Left;

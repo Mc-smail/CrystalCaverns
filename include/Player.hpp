@@ -9,9 +9,9 @@ private:
 
 public:
     Player(int x, int y, SDL_Texture* texture = nullptr);
-    void handleInput(const InputManager& input, TileMap& map);
-    void move(Direction direction, TileMap& map);
-    void collect(TileMap& map);
-    int getCrystals() const;
-    void update(float deltaTime, TileMap& map) override;
+    void verarbeiteEingabe(const InputManager& input, TileMap& map);
+    void bewege(Direction direction, TileMap& map);
+    void sammleFeld(TileMap& map);
+    int getKristalle() const;
+    void aktualisieren(float deltaTime, TileMap& map) override;
 };

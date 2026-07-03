@@ -2,22 +2,22 @@
 
 Tile::Tile(TileType type) : type(type) {}
 
-TileType Tile::getType() const { return type; }
-void Tile::setType(TileType newType) { type = newType; }
+TileType Tile::getTyp() const { return type; }
+void Tile::setTyp(TileType newType) { type = newType; }
 
-bool Tile::isSolid() const {
+bool Tile::istFest() const {
     return type == TileType::Wall || type == TileType::Boulder || type == TileType::ExitClosed;
 }
 
-bool Tile::isWalkable() const {
+bool Tile::istBegehbar() const {
     return type == TileType::Empty || type == TileType::Dirt || type == TileType::Crystal || type == TileType::ExitOpen;
 }
 
-bool Tile::isCollectible() const {
+bool Tile::istSammelbar() const {
     return type == TileType::Crystal;
 }
 
-SDL_Color Tile::color() const {
+SDL_Color Tile::farbe() const {
     switch (type) {
         case TileType::Wall:       return {70, 70, 90, 255};
         case TileType::Dirt:       return {116, 74, 38, 255};

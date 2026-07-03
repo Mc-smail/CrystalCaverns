@@ -8,5 +8,5 @@ private:
 
 public:
     Enemy(int x, int y, SDL_Texture* texture = nullptr);
-    void update(float deltaTime, TileMap& map) override;
+    void aktualisieren(float deltaTime, TileMap& map) override;
 };

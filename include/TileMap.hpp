@@ -17,20 +17,20 @@ private:
     std::vector<Vector2i> boulderStarts;
 
 public:
-    bool loadFromFile(const std::string& filename);
-    void render(SDL_Renderer* renderer, const TextureManager& textures) const;
+    bool ladeAusDatei(const std::string& filename);
+    void zeichnen(SDL_Renderer* renderer, const TextureManager& textures) const;
 
-    bool inBounds(int x, int y) const;
-    bool isWalkable(int x, int y) const;
-    Tile& getTile(int x, int y);
-    const Tile& getTile(int x, int y) const;
-    void setTile(int x, int y, TileType type);
-    void openExit();
+    bool istImBereich(int x, int y) const;
+    bool istBegehbar(int x, int y) const;
+    Tile& getFeld(int x, int y);
+    const Tile& getFeld(int x, int y) const;
+    void setFeld(int x, int y, TileType type);
+    void oeffneAusgang();
 
     int getWidth() const;
     int getHeight() const;
-    int getTileSize() const;
-    Vector2i getPlayerStart() const;
-    const std::vector<Vector2i>& getEnemyStarts() const;
-    const std::vector<Vector2i>& getBoulderStarts() const;
+    int getFeldGroesse() const;
+    Vector2i getSpielerStart() const;
+    const std::vector<Vector2i>& getGegnerStarts() const;
+    const std::vector<Vector2i>& getSteinStarts() const;
 };

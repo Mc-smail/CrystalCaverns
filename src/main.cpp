@@ -2,9 +2,9 @@
 
 int main(int, char**) {
     Game game;
-    if (!game.init()) {
+    if (!game.vorbereiten()) {
         return 1;
     }
-    game.run();
+    game.spielen();
     return 0;
 }

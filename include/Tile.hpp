@@ -19,11 +19,11 @@ public:
     Tile() = default;
     explicit Tile(TileType type);
 
-    TileType getType() const;
-    void setType(TileType newType);
+    TileType getTyp() const;
+    void setTyp(TileType newType);
 
-    bool isSolid() const;
-    bool isWalkable() const;
-    bool isCollectible() const;
-    SDL_Color color() const;
+    bool istFest() const;
+    bool istBegehbar() const;
+    bool istSammelbar() const;
+    SDL_Color farbe() const;
 };

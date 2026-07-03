@@ -2,7 +2,7 @@
 #include <fstream>
 #include <iostream>
 
-bool TileMap::loadFromFile(const std::string& filename) {
+bool TileMap::ladeAusDatei(const std::string& filename) {
     std::ifstream file(filename);
     if (!file) {
         std::cerr << "Could not open level: " << filename << "\n";
@@ -49,14 +49,14 @@ bool TileMap::loadFromFile(const std::string& filename) {
     return width > 0 && height > 0;
 }
 
-void TileMap::render(SDL_Renderer* renderer, const TextureManager& textures) const {
+void TileMap::zeichnen(SDL_Renderer* renderer, const TextureManager& textures) const {
     for (int y = 0; y < height; ++y) {
         for (int x = 0; x < width; ++x) {
             SDL_Rect rect{x * tileSize, y * tileSize, tileSize, tileSize};
             const Tile& tile = tiles[y][x];
 
             const char* textureId = "empty";
-            switch (tile.getType()) {
+            switch (tile.getTyp()) {
                 case TileType::Wall:       textureId = "wall"; break;
                 case TileType::Dirt:       textureId = "dirt"; break;
                 case TileType::Crystal:    textureId = "crystal"; break;
@@ -66,11 +66,11 @@ void TileMap::render(SDL_Renderer* renderer, const TextureManager& textures) con
                 case TileType::Empty:      textureId = "empty"; break;
             }
 
-            SDL_Texture* texture = textures.get(textureId);
+            SDL_Texture* texture = textures.getTextur(textureId);
             if (texture) {
                 SDL_RenderCopy(renderer, texture, nullptr, &rect);
             } else {
-                SDL_Color color = tile.color();
+                SDL_Color color = tile.farbe();
                 SDL_SetRenderDrawColor(renderer, color.r, color.g, color.b, color.a);
                 SDL_RenderFillRect(renderer, &rect);
             }
@@ -81,29 +81,29 @@ void TileMap::render(SDL_Renderer* renderer, const TextureManager& textures) con
     }
 }
 
-bool TileMap::inBounds(int x, int y) const {
+bool TileMap::istImBereich(int x, int y) const {
     return y >= 0 && y < height && x >= 0 && x < width;
 }
 
-bool TileMap::isWalkable(int x, int y) const {
-    return inBounds(x, y) && tiles[y][x].isWalkable();
+bool TileMap::istBegehbar(int x, int y) const {
+    return istImBereich(x, y) && tiles[y][x].istBegehbar();
 }
 
-Tile& TileMap::getTile(int x, int y) { return tiles[y][x]; }
-const Tile& TileMap::getTile(int x, int y) const { return tiles[y][x]; }
-void TileMap::setTile(int x, int y, TileType type) { if (inBounds(x,y)) tiles[y][x].setType(type); }
+Tile& TileMap::getFeld(int x, int y) { return tiles[y][x]; }
+const Tile& TileMap::getFeld(int x, int y) const { return tiles[y][x]; }
+void TileMap::setFeld(int x, int y, TileType type) { if (istImBereich(x,y)) tiles[y][x].setTyp(type); }
 
-void TileMap::openExit() {
+void TileMap::oeffneAusgang() {
     for (auto& row : tiles) {
         for (auto& tile : row) {
-            if (tile.getType() == TileType::ExitClosed) tile.setType(TileType::ExitOpen);
+            if (tile.getTyp() == TileType::ExitClosed) tile.setTyp(TileType::ExitOpen);
         }
     }
 }
 
 int TileMap::getWidth() const { return width; }
 int TileMap::getHeight() const { return height; }
-int TileMap::getTileSize() const { return tileSize; }
-Vector2i TileMap::getPlayerStart() const { return playerStart; }
-const std::vector<Vector2i>& TileMap::getEnemyStarts() const { return enemyStarts; }
-const std::vector<Vector2i>& TileMap::getBoulderStarts() const { return boulderStarts; }
+int TileMap::getFeldGroesse() const { return tileSize; }
+Vector2i TileMap::getSpielerStart() const { return playerStart; }
+const std::vector<Vector2i>& TileMap::getGegnerStarts() const { return enemyStarts; }
+const std::vector<Vector2i>& TileMap::getSteinStarts() const { return boulderStarts; }
