@@ -1,19 +1,19 @@
-#include "TextureManager.hpp"
+#include "Bilder.hpp"
 #include <iostream>
 
-TextureManager::TextureManager(SDL_Renderer* renderer) : renderer(renderer) {}
+Bilder::Bilder(SDL_Renderer* renderer) : renderer(renderer) {}
 
-TextureManager::~TextureManager() {
+Bilder::~Bilder() {
     loescheAlleTexturen();
 }
 
-void TextureManager::setRenderer(SDL_Renderer* newRenderer) {
+void Bilder::setRenderer(SDL_Renderer* newRenderer) {
     renderer = newRenderer;
 }
 
-bool TextureManager::ladeTextur(const std::string& id, const std::string& path) {
+bool Bilder::ladeTextur(const std::string& id, const std::string& path) {
     if (!renderer) {
-        std::cerr << "TextureManager has no renderer.\n";
+        std::cerr << "Bilder has no renderer.\n";
         return false;
     }
 
@@ -35,13 +35,13 @@ bool TextureManager::ladeTextur(const std::string& id, const std::string& path) 
     return true;
 }
 
-SDL_Texture* TextureManager::getTextur(const std::string& id) const {
+SDL_Texture* Bilder::getTextur(const std::string& id) const {
     auto it = textures.find(id);
     if (it == textures.end()) return nullptr;
     return it->second;
 }
 
-void TextureManager::loescheAlleTexturen() {
+void Bilder::loescheAlleTexturen() {
     for (auto& [id, texture] : textures) {
         SDL_DestroyTexture(texture);
     }

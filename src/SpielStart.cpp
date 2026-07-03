@@ -1,7 +1,7 @@
-#include "Game.hpp"
+#include "Spiel.hpp"
 
 int main(int, char**) {
-    Game game;
+    Spiel game;
     if (!game.vorbereiten()) {
         return 1;
     }

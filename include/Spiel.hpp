@@ -2,14 +2,14 @@
 #include <SDL.h>
 #include <memory>
 #include <vector>
-#include "InputManager.hpp"
-#include "TileMap.hpp"
-#include "Player.hpp"
-#include "Enemy.hpp"
-#include "Boulder.hpp"
-#include "TextureManager.hpp"
+#include "Tastatur.hpp"
+#include "LevelKarte.hpp"
+#include "Spieler.hpp"
+#include "Gegner.hpp"
+#include "Stein.hpp"
+#include "Bilder.hpp"
 
-class Game {
+class Spiel {
 private:
     static constexpr int WINDOW_WIDTH = 640;
     static constexpr int WINDOW_HEIGHT = 480;
@@ -25,12 +25,12 @@ private:
 
     SDL_Window* window = nullptr;
     SDL_Renderer* renderer = nullptr;
-    InputManager input;
-    TextureManager textures;
-    TileMap map;
-    std::unique_ptr<Player> player;
-    std::vector<std::unique_ptr<Enemy>> enemies;
-    std::vector<std::unique_ptr<Boulder>> boulders;
+    Tastatur input;
+    Bilder textures;
+    LevelKarte map;
+    std::unique_ptr<Spieler> player;
+    std::vector<std::unique_ptr<Gegner>> enemies;
+    std::vector<std::unique_ptr<Stein>> boulders;
 
     void verarbeiteEingaben();
     void aktualisiereSpiel(float deltaTime);
@@ -45,5 +45,5 @@ public:
     bool vorbereiten();
     void spielen();
     void beenden();
-    ~Game();
+    ~Spiel();
 };

@@ -1,8 +1,8 @@
-#include "Game.hpp"
+#include "Spiel.hpp"
 #include <iostream>
 #include <string>
 
-bool Game::vorbereiten() {
+bool Spiel::vorbereiten() {
     if (SDL_Init(SDL_INIT_VIDEO) != 0) {
         std::cerr << "SDL_Init failed: " << SDL_GetError() << "\n";
         return false;
@@ -47,22 +47,22 @@ bool Game::vorbereiten() {
     return true;
 }
 
-bool Game::ladeLevel(const std::string& path) {
+bool Spiel::ladeLevel(const std::string& path) {
     if (!map.ladeAusDatei(path)) {
         return false;
     }
 
-    Vector2i start = map.getSpielerStart();
-    player = std::make_unique<Player>(start.x, start.y, textures.getTextur("player"));
+    Position2D start = map.getSpielerStart();
+    player = std::make_unique<Spieler>(start.x, start.y, textures.getTextur("player"));
 
     enemies.clear();
     for (const auto& pos : map.getGegnerStarts()) {
-        enemies.push_back(std::make_unique<Enemy>(pos.x, pos.y, textures.getTextur("enemy")));
+        enemies.push_back(std::make_unique<Gegner>(pos.x, pos.y, textures.getTextur("enemy")));
     }
 
     boulders.clear();
     for (const auto& pos : map.getSteinStarts()) {
-        boulders.push_back(std::make_unique<Boulder>(pos.x, pos.y, textures.getTextur("boulder")));
+        boulders.push_back(std::make_unique<Stein>(pos.x, pos.y, textures.getTextur("boulder")));
     }
 
     victory = false;
@@ -71,7 +71,7 @@ bool Game::ladeLevel(const std::string& path) {
     return true;
 }
 
-void Game::spielen() {
+void Spiel::spielen() {
     Uint64 previous = SDL_GetPerformanceCounter();
 
     while (running) {
@@ -85,7 +85,7 @@ void Game::spielen() {
     }
 }
 
-void Game::verarbeiteEingaben() {
+void Spiel::verarbeiteEingaben() {
     SDL_Event event{};
     while (SDL_PollEvent(&event)) {
         input.verarbeiteEvent(event);
@@ -104,7 +104,7 @@ void Game::verarbeiteEingaben() {
     }
 }
 
-void Game::aktualisiereSpiel(float deltaTime) {
+void Spiel::aktualisiereSpiel(float deltaTime) {
     if (!player || victory || gameOver) return;
 
     timeLeft -= deltaTime;
@@ -124,7 +124,7 @@ void Game::aktualisiereSpiel(float deltaTime) {
     }
 
     const auto p = player->getPosition();
-    if (map.getFeld(p.x, p.y).getTyp() == TileType::ExitOpen) {
+    if (map.getFeld(p.x, p.y).getTyp() == FeldTyp::ExitOpen) {
         if (currentLevel >= 2) {
             victory = true;
         } else {
@@ -136,7 +136,7 @@ void Game::aktualisiereSpiel(float deltaTime) {
     pruefeKollisionen();
 }
 
-void Game::pruefeKollisionen() {
+void Spiel::pruefeKollisionen() {
     const auto p = player->getPosition();
 
     for (const auto& enemy : enemies) {
@@ -155,7 +155,7 @@ void Game::pruefeKollisionen() {
     }
 }
 
-void Game::verliereLeben() {
+void Spiel::verliereLeben() {
     --lives;
     if (lives <= 0) {
         gameOver = true;
@@ -166,7 +166,7 @@ void Game::verliereLeben() {
     ladeLevel(path);
 }
 
-void Game::starteNaechstesLevel() {
+void Spiel::starteNaechstesLevel() {
     if (currentLevel == 1) {
         currentLevel = 2;
         ladeLevel("assets/levels/level02.txt");
@@ -175,7 +175,7 @@ void Game::starteNaechstesLevel() {
     }
 }
 
-void Game::zeichneSpiel() {
+void Spiel::zeichneSpiel() {
     SDL_SetRenderDrawColor(renderer, 10, 12, 20, 255);
     SDL_RenderClear(renderer);
 
@@ -188,7 +188,7 @@ void Game::zeichneSpiel() {
     SDL_RenderPresent(renderer);
 }
 
-void Game::zeichneAnzeige() {
+void Spiel::zeichneAnzeige() {
     SDL_Rect hud{0, WINDOW_HEIGHT - 32, WINDOW_WIDTH, 32};
     SDL_SetRenderDrawColor(renderer, 0, 0, 0, 180);
     SDL_RenderFillRect(renderer, &hud);
@@ -229,11 +229,11 @@ void Game::zeichneAnzeige() {
     }
 }
 
-void Game::beenden() {
+void Spiel::beenden() {
     running = false;
 }
 
-Game::~Game() {
+Spiel::~Spiel() {
     if (renderer) SDL_DestroyRenderer(renderer);
     if (window) SDL_DestroyWindow(window);
     SDL_Quit();

@@ -9,7 +9,7 @@ GitHub Repository: <https://github.com/Mc-smail/CrystalCaverns>
 
 ## Spielidee
 
-Das Spiel ist ein Tile-Based-Game im Stil klassischer Retro-Höhlenspiele.  
+Das Spiel ist ein Feld-Based-Spiel im Stil klassischer Retro-Höhlenspiele.  
 Der Spieler startet in einer Höhle und muss genug Kristalle sammeln, um den Ausgang zu öffnen.
 
 Nach Abschluss von Level 1 startet automatisch ein schwierigeres Level 2.
@@ -33,9 +33,9 @@ Der Spieler hat **3 Leben**. Bei 0 Leben ist das Spiel vorbei.
 ## Features
 
 - SDL2-Fenster und Renderer
-- Game Loop: `Input → Update → Render`
+- Spiel Loop: `Input → Update → Render`
 - echte SDL-Texturen mit BMP-Sprites
-- Tilemap aus Textdateien
+- Feldmap aus Textdateien
 - Spielerbewegung mit WASD oder Pfeiltasten
 - Kristalle sammeln
 - Ausgang öffnet sich nach 7 Kristallen
@@ -57,7 +57,7 @@ Der Spieler hat **3 Leben**. Bei 0 Leben ist das Spiel vorbei.
 | `A` / Pfeil links | Spieler nach links bewegen |
 | `S` / Pfeil runter | Spieler nach unten bewegen |
 | `D` / Pfeil rechts | Spieler nach rechts bewegen |
-| `R` | Nach Game Over / Victory neu starten |
+| `R` | Nach Spiel Over / Victory neu starten |
 | `ESC` | Spiel beenden |
 
 ---
@@ -70,7 +70,7 @@ Der Spieler hat **3 Leben**. Bei 0 Leben ist das Spiel vorbei.
 | `.` | Erde / begehbares Feld |
 | `P` | Spielerstart |
 | `C` | Kristall |
-| `O` | Stein / Boulder |
+| `O` | Stein / Stein |
 | `X` | Gegner |
 | `E` | Ausgang |
 
@@ -89,15 +89,15 @@ Level 2 ist schwieriger, weil es mehr Kristalle, mehr Steine und engere Wege ent
 
 ## Technische Umsetzung
 
-Das Projekt nutzt zentrale Konzepte aus C++ und 2D Game Development:
+Das Projekt nutzt zentrale Konzepte aus C++ und 2D Spiel Development:
 
 - SDL Event Handling
 - Keyboard State
-- Game Loop
-- Tilemaps
+- Spiel Loop
+- Feldmaps
 - einfache Kollisionen
 - Klassen und Vererbung
-- Polymorphismus über `Entity`
+- Polymorphismus über `Figur`
 - moderne Speicherverwaltung mit `std::unique_ptr`
 - Trennung von Header- und Source-Dateien
 
@@ -109,15 +109,15 @@ Wichtige Klassen:
 
 | Klasse | Aufgabe |
 |---|---|
-| `Game` | Hauptklasse, Game Loop, Levelwechsel, Sieg/Niederlage |
-| `InputManager` | Tastatur- und SDL-Event-Verarbeitung |
-| `TextureManager` | Laden und Verwalten von BMP-Texturen |
-| `Tile` | Einzelnes Feld der Map |
-| `TileMap` | Lädt und rendert das Level |
-| `Entity` | Abstrakte Basisklasse für bewegliche Objekte |
-| `Player` | Spielerbewegung, Kristalle sammeln |
-| `Enemy` | Automatisch bewegter Gegner |
-| `Boulder` | Fallender Stein |
+| `Spiel` | Hauptklasse, Spiel Loop, Levelwechsel, Sieg/Niederlage |
+| `Tastatur` | Tastatur- und SDL-Event-Verarbeitung |
+| `Bilder` | Laden und Verwalten von BMP-Texturen |
+| `Feld` | Einzelnes Feld der Map |
+| `LevelKarte` | Lädt und rendert das Level |
+| `Figur` | Abstrakte Basisklasse für bewegliche Objekte |
+| `Spieler` | Spielerbewegung, Kristalle sammeln |
+| `Gegner` | Automatisch bewegter Gegner |
+| `Stein` | Fallender Stein |
 
 ---
 
@@ -125,26 +125,26 @@ Wichtige Klassen:
 
 ```mermaid
 classDiagram
-    class Game
-    class InputManager
-    class TextureManager
-    class TileMap
-    class Tile
-    class Entity
-    class Player
-    class Enemy
-    class Boulder
+    class Spiel
+    class Tastatur
+    class Bilder
+    class LevelKarte
+    class Feld
+    class Figur
+    class Spieler
+    class Gegner
+    class Stein
 
-    Game --> InputManager
-    Game --> TextureManager
-    Game --> TileMap
-    Game --> Player
-    Game --> Enemy
-    Game --> Boulder
-    TileMap --> Tile
-    Entity <|-- Player
-    Entity <|-- Enemy
-    Entity <|-- Boulder
+    Spiel --> Tastatur
+    Spiel --> Bilder
+    Spiel --> LevelKarte
+    Spiel --> Spieler
+    Spiel --> Gegner
+    Spiel --> Stein
+    LevelKarte --> Feld
+    Figur <|-- Spieler
+    Figur <|-- Gegner
+    Figur <|-- Stein
 ```
 
 ---
@@ -170,27 +170,27 @@ CrystalCaverns/
 │       ├── player.bmp
 │       └── wall.bmp
 ├── include/
-│   ├── Boulder.hpp
-│   ├── Enemy.hpp
-│   ├── Entity.hpp
-│   ├── Game.hpp
-│   ├── InputManager.hpp
-│   ├── Player.hpp
-│   ├── TextureManager.hpp
-│   ├── Tile.hpp
-│   ├── TileMap.hpp
-│   └── Types.hpp
+│   ├── Stein.hpp
+│   ├── Gegner.hpp
+│   ├── Figur.hpp
+│   ├── Spiel.hpp
+│   ├── Tastatur.hpp
+│   ├── Spieler.hpp
+│   ├── Bilder.hpp
+│   ├── Feld.hpp
+│   ├── LevelKarte.hpp
+│   └── Datentypen.hpp
 └── src/
-    ├── Boulder.cpp
-    ├── Enemy.cpp
-    ├── Entity.cpp
-    ├── Game.cpp
-    ├── InputManager.cpp
-    ├── main.cpp
-    ├── Player.cpp
-    ├── TextureManager.cpp
-    ├── Tile.cpp
-    └── TileMap.cpp
+    ├── Stein.cpp
+    ├── Gegner.cpp
+    ├── Figur.cpp
+    ├── Spiel.cpp
+    ├── Tastatur.cpp
+    ├── SpielStart.cpp
+    ├── Spieler.cpp
+    ├── Bilder.cpp
+    ├── Feld.cpp
+    └── LevelKarte.cpp
 ```
 
 ---
@@ -240,7 +240,7 @@ cd ..
 
 Die aktuelle Version benutzt echte SDL-Grafikdateien im BMP-Format. Dadurch wird keine Zusatzbibliothek wie SDL2_image benötigt.
 
-Die Texturen werden über `TextureManager` geladen:
+Die Texturen werden über `Bilder` geladen:
 
 ```cpp
 SDL_Surface* surface = SDL_LoadBMP(path.c_str());
@@ -250,7 +250,7 @@ SDL_RenderCopy(renderer, texture, nullptr, &rect);
 
 ---
 
-## Wichtige Codeidee: Game Loop
+## Wichtige Codeidee: Spiel Loop
 
 ```cpp
 while (running) {
@@ -260,11 +260,11 @@ while (running) {
 }
 ```
 
-Die Game Loop besteht aus:
+Die Spiel Loop besteht aus:
 
 1. **Input:** Tastatur und SDL-Events lesen.
 2. **Update:** Weltzustand, Gegner, Steine, Timer und Kollisionen aktualisieren.
-3. **Render:** Tilemap, Spieler, Gegner, Steine und HUD zeichnen.
+3. **Render:** Feldmap, Spieler, Gegner, Steine und HUD zeichnen.
 
 ---
 
@@ -286,4 +286,4 @@ Die Game Loop besteht aus:
 ## Fazit
 
 Crystal Caverns ist ein kleines, aber vollständiges C++/SDL2-Spielprojekt.  
-Es zeigt Game Loop, Input, Rendering, Tilemaps, Kollisionen, Entities und objektorientierte Struktur in einem praktischen Spiel.
+Es zeigt Spiel Loop, Input, Rendering, Feldmaps, Kollisionen, Entities und objektorientierte Struktur in einem praktischen Spiel.

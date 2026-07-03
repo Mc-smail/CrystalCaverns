@@ -1,7 +1,7 @@
 #pragma once
 #include <SDL.h>
 
-class InputManager {
+class Tastatur {
 private:
     const Uint8* keyboardState = nullptr;
     bool quitRequested = false;

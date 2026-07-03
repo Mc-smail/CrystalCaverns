@@ -1,10 +1,10 @@
-#include "Boulder.hpp"
+#include "Stein.hpp"
 
-Boulder::Boulder(int x, int y, SDL_Texture* texture) : Entity(x, y, SDL_Color{150, 150, 150, 255}, texture) {}
+Stein::Stein(int x, int y, SDL_Texture* texture) : Figur(x, y, SDL_Color{150, 150, 150, 255}, texture) {}
 
-bool Boulder::faelltGerade() const { return falling; }
+bool Stein::faelltGerade() const { return falling; }
 
-void Boulder::aktualisieren(float deltaTime, TileMap& map) {
+void Stein::aktualisieren(float deltaTime, LevelKarte& map) {
     fallTimer += deltaTime;
     if (fallTimer < 0.14f) return;
     fallTimer = 0.0f;

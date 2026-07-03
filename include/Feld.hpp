@@ -1,26 +1,26 @@
 #pragma once
 #include <SDL.h>
 
-enum class TileType {
+enum class FeldTyp {
     Empty,
     Wall,
     Dirt,
     Crystal,
-    Boulder,
+    Stein,
     ExitClosed,
     ExitOpen
 };
 
-class Tile {
+class Feld {
 private:
-    TileType type = TileType::Empty;
+    FeldTyp type = FeldTyp::Empty;
 
 public:
-    Tile() = default;
-    explicit Tile(TileType type);
+    Feld() = default;
+    explicit Feld(FeldTyp type);
 
-    TileType getTyp() const;
-    void setTyp(TileType newType);
+    FeldTyp getTyp() const;
+    void setTyp(FeldTyp newType);
 
     bool istFest() const;
     bool istBegehbar() const;

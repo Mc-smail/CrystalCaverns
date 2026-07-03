@@ -6,16 +6,16 @@ set(CMAKE_CXX_STANDARD_REQUIRED ON)
 set(CMAKE_CXX_EXTENSIONS OFF)
 
 add_executable(CrystalCaverns
-    src/main.cpp
-    src/Game.cpp
-    src/InputManager.cpp
-    src/TextureManager.cpp
-    src/Tile.cpp
-    src/TileMap.cpp
-    src/Entity.cpp
-    src/Player.cpp
-    src/Enemy.cpp
-    src/Boulder.cpp
+    src/SpielStart.cpp
+    src/Spiel.cpp
+    src/Tastatur.cpp
+    src/Bilder.cpp
+    src/Feld.cpp
+    src/LevelKarte.cpp
+    src/Figur.cpp
+    src/Spieler.cpp
+    src/Gegner.cpp
+    src/Stein.cpp
 )
 
 target_include_directories(CrystalCaverns PRIVATE include)
