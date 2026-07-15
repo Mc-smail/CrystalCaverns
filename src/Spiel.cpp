@@ -3,6 +3,7 @@
 #include <string>
 
 bool Spiel::vorbereiten() {
+    //SDL für Fenster und Grafik benutzen.
     if (SDL_Init(SDL_INIT_VIDEO) != 0) {
         std::cerr << "SDL_Init failed: " << SDL_GetError() << "\n";
         return false;
@@ -10,7 +11,7 @@ bool Spiel::vorbereiten() {
 
     window = SDL_CreateWindow(
         "Crystal Caverns",
-        SDL_WINDOWPOS_CENTERED,
+        SDL_WINDOWPOS_CENTERED, // Werte stehen in Spiel.hpp
         SDL_WINDOWPOS_CENTERED,
         WINDOW_WIDTH,
         WINDOW_HEIGHT,
