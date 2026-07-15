@@ -4,3 +4,4 @@ build/
 *.out
 *.app
 .vscode/
+.idea/
