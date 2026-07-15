@@ -48,12 +48,14 @@ bool Spiel::vorbereiten() {
     return true;
 }
 
+//Die Datei auf der Festplatte bleibt dabei unverändert.
 bool Spiel::ladeLevel(const std::string& path) {
     if (!map.ladeAusDatei(path)) {
         return false;
     }
 
     Position2D start = map.getSpielerStart();
+    // erzeugt ein neues Spieler-Objekt. statt zu machen: Spieler* player = new Spieler(...); da delete unnötig ist & Es gibt genau einen Besitzer
     player = std::make_unique<Spieler>(start.x, start.y, textures.getTextur("player"));
 
     enemies.clear();
