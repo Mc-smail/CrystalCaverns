@@ -80,7 +80,7 @@ void Spiel::spielen() {
     while (running) {
         Uint64 current = SDL_GetPerformanceCounter();
         float deltaTime = static_cast<float>(current - previous) / static_cast<float>(SDL_GetPerformanceFrequency());
-        previous = current;
+        previous = current;// Aktuelle Zeit wird für den nächsten Frame gespeichert.
 
         verarbeiteEingaben();
         aktualisiereSpiel(deltaTime);
