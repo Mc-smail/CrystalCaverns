@@ -3,7 +3,7 @@
 #include <string>
 
 bool Spiel::vorbereiten() {
-    //SDL für Fenster und Grafik benutzen.
+
     if (SDL_Init(SDL_INIT_VIDEO) != 0) {
         std::cerr << "SDL_Init failed: " << SDL_GetError() << "\n";
         return false;
@@ -11,7 +11,7 @@ bool Spiel::vorbereiten() {
 
     window = SDL_CreateWindow(
         "Crystal Caverns",
-        SDL_WINDOWPOS_CENTERED, // Werte stehen in Spiel.hpp
+        SDL_WINDOWPOS_CENTERED,
         SDL_WINDOWPOS_CENTERED,
         WINDOW_WIDTH,
         WINDOW_HEIGHT,
@@ -48,14 +48,14 @@ bool Spiel::vorbereiten() {
     return true;
 }
 
-//Die Datei auf der Festplatte bleibt dabei unverändert.
+
 bool Spiel::ladeLevel(const std::string& path) {
     if (!map.ladeAusDatei(path)) {
         return false;
     }
 
     Position2D start = map.getSpielerStart();
-    // erzeugt ein neues Spieler-Objekt. statt zu machen: Spieler* player = new Spieler(...); da delete unnötig ist & Es gibt genau einen Besitzer
+
     player = std::make_unique<Spieler>(start.x, start.y, textures.getTextur("player"));
 
     enemies.clear();
@@ -80,7 +80,7 @@ void Spiel::spielen() {
     while (running) {
         Uint64 current = SDL_GetPerformanceCounter();
         float deltaTime = static_cast<float>(current - previous) / static_cast<float>(SDL_GetPerformanceFrequency());
-        previous = current;// Aktuelle Zeit wird für den nächsten Frame gespeichert.
+        previous = current;
 
         verarbeiteEingaben();
         aktualisiereSpiel(deltaTime);
