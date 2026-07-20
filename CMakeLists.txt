@@ -51,3 +51,16 @@ endif()
 if(APPLE)
     target_compile_definitions(CrystalCaverns PRIVATE SDL_MAIN_HANDLED)
 endif()
+
+
+include(CTest)
+if(BUILD_TESTING)
+    find_package(Python3 COMPONENTS Interpreter QUIET)
+    if(Python3_Interpreter_FOUND)
+        add_test(
+            NAME validate_levels
+            COMMAND ${Python3_EXECUTABLE} ${CMAKE_SOURCE_DIR}/tools/validate_levels.py
+            WORKING_DIRECTORY ${CMAKE_SOURCE_DIR}
+        )
+    endif()
+endif()
