@@ -73,3 +73,13 @@ add_custom_target(copy_assets ALL
     COMMENT "Copying game assets to build directory"
 )
 add_dependencies(CrystalCaverns copy_assets)
+
+
+option(CRYSTAL_CAVERNS_ENABLE_WARNINGS "Enable extra compiler warnings" ON)
+if(CRYSTAL_CAVERNS_ENABLE_WARNINGS)
+    if(MSVC)
+        target_compile_options(CrystalCaverns PRIVATE /W4)
+    else()
+        target_compile_options(CrystalCaverns PRIVATE -Wall -Wextra -Wpedantic)
+    endif()
+endif()
