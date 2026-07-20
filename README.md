@@ -317,3 +317,13 @@ Additional notes are available in `docs/`:
 - level design notes
 - asset notes
 - architecture notes
+
+## Roadmap
+
+Possible improvements:
+
+- add sound effects
+- add more levels
+- add score persistence
+- add automated gameplay tests for map rules
+- add release packaging notes
