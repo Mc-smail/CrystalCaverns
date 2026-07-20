@@ -287,3 +287,13 @@ Die Spiel Loop besteht aus:
 
 Crystal Caverns ist ein kleines, aber vollständiges C++/SDL2-Spielprojekt.  
 Es zeigt Spiel Loop, Input, Rendering, Feldmaps, Kollisionen, Entities und objektorientierte Struktur in einem praktischen Spiel.
+
+## Level Validation
+
+Level text files can be checked without launching the game:
+
+```bash
+python3 tools/validate_levels.py
+```
+
+The validator checks row widths, allowed map characters and required player/exit markers.
