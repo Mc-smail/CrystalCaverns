@@ -306,3 +306,14 @@ After configuring CMake, run the validation test with:
 cd build
 ctest --output-on-failure
 ```
+
+## Documentation
+
+Additional notes are available in `docs/`:
+
+- build notes
+- controls reference
+- gameplay notes
+- level design notes
+- asset notes
+- architecture notes
