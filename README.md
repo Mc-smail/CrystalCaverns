@@ -297,3 +297,12 @@ python3 tools/validate_levels.py
 ```
 
 The validator checks row widths, allowed map characters and required player/exit markers.
+
+## Build Tests
+
+After configuring CMake, run the validation test with:
+
+```bash
+cd build
+ctest --output-on-failure
+```
