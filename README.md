@@ -7,6 +7,14 @@ GitHub Repository: <https://github.com/Mc-smail/CrystalCaverns>
 
 ---
 
+## Screenshot
+
+![Crystal Caverns Gameplay](docs/screenshots/crystal-caverns-gameplay.jpeg)
+
+Der Screenshot zeigt eine laufende Crystal-Caverns-Spielszene mit Levelkarte, Spieler, Kristallen, Gegnern und HUD.
+
+---
+
 ## Spielidee
 
 Das Spiel ist ein Feld-Based-Spiel im Stil klassischer Retro-Höhlenspiele.  
